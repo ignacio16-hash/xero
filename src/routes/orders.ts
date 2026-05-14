@@ -4,12 +4,10 @@ import { getOrders, getOrderById } from '../services/order.service';
 const router = Router();
 
 router.get('/', async (req: Request, res: Response) => {
-  const { marketplace, page, limit } = req.query;
-  const result = await getOrders(
-    marketplace as string | undefined,
-    page ? parseInt(page as string) : 1,
-    limit ? parseInt(limit as string) : 20
-  );
+  const marketplace = typeof req.query.marketplace === 'string' ? req.query.marketplace : undefined;
+  const page = typeof req.query.page === 'string' ? parseInt(req.query.page) : 1;
+  const limit = typeof req.query.limit === 'string' ? parseInt(req.query.limit) : 20;
+  const result = await getOrders(marketplace, page, limit);
   res.json(result);
 });
 
