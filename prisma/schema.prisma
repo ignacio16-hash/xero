@@ -1,0 +1,62 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Order {
+  id           String      @id @default(cuid())
+  externalId   String
+  marketplace  String
+  status       String
+  currency     String      @default("CLP")
+  subtotal     Float
+  shippingCost Float       @default(0)
+  total        Float
+  placedAt     DateTime
+  rawPayload   Json
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  customer     Customer?
+  items        OrderItem[]
+
+  @@unique([externalId, marketplace])
+  @@index([marketplace])
+  @@index([status])
+  @@index([placedAt])
+}
+
+model Customer {
+  id         String  @id @default(cuid())
+  externalId String
+  name       String
+  email      String
+  phone      String?
+  street     String
+  city       String
+  region     String
+  country    String  @default("CL")
+  zipCode    String?
+
+  orderId    String  @unique
+  order      Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+}
+
+model OrderItem {
+  id         String @id @default(cuid())
+  sku        String
+  name       String
+  quantity   Int
+  unitPrice  Float
+  totalPrice Float
+  currency   String @default("CLP")
+
+  orderId    String
+  order      Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([sku])
+}

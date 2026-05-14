@@ -1,0 +1,19 @@
+import 'dotenv/config';
+import app from './app';
+import prisma from './config/database';
+
+const PORT = process.env.PORT ?? 3000;
+
+async function main() {
+  await prisma.$connect();
+  console.log('Database connected');
+
+  app.listen(PORT, () => {
+    console.log(`Xero running on port ${PORT}`);
+  });
+}
+
+main().catch((err) => {
+  console.error('Startup error:', err);
+  process.exit(1);
+});
