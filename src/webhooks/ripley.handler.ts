@@ -37,7 +37,7 @@ function normalize(payload: Record<string, unknown>): NormalizedOrder {
       name: i.name ?? '',
       quantity: Number(i.quantity ?? 1),
       unitPrice: Number(i.unitPrice ?? i.price ?? 0),
-      totalPrice: Number(i.totalPrice ?? i.quantity * i.price ?? 0),
+      totalPrice: Number(i.totalPrice ?? (i.quantity ?? 0) * (i.price ?? 0)),
       currency: order.currency ?? 'CLP',
     })),
     subtotal: Number(order.subtotal ?? 0),

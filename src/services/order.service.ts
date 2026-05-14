@@ -1,3 +1,4 @@
+import { Prisma } from '@prisma/client';
 import prisma from '../config/database';
 import { NormalizedOrder } from '../types';
 
@@ -14,7 +15,7 @@ export async function upsertOrder(order: NormalizedOrder) {
       subtotal: order.subtotal,
       shippingCost: order.shippingCost,
       total: order.total,
-      rawPayload: order.rawPayload,
+      rawPayload: order.rawPayload as Prisma.InputJsonValue,
       updatedAt: new Date(),
     },
     create: {
@@ -26,7 +27,7 @@ export async function upsertOrder(order: NormalizedOrder) {
       shippingCost: order.shippingCost,
       total: order.total,
       placedAt: order.placedAt,
-      rawPayload: order.rawPayload,
+      rawPayload: order.rawPayload as Prisma.InputJsonValue,
       customer: {
         create: {
           externalId: order.customer.externalId,
